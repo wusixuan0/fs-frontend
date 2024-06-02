@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>Programs</title> -->
+    <!-- TODO -->
+</head>
+<body>
+    <h1>"insert name of music"(this page displays a list of programs with skater name, nation, discipline, program type, choreographer, season)</h1>
+
+    <table id="programTable">
+        <thead>
+            <tr>
+                <th>Skater</th>
+                <th>Program Type</th>
+                <th>Season</th>
+            </tr>
+        </thead>
+        <tbody id="programTableBody">
+            <!-- Program data will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Access the programs variable directly
+        async function fetchPrograms() {
+            const response = await fetch('/.netlify/functions/app');
+            const programsData = await response.json();
+            // Populate the table with the fetched data
+            const tableBody = document.getElementById('programTableBody');
+            programsData.forEach(program => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = program.program_title;
+                row.insertCell(1).textContent = program.program_type;
+                row.insertCell(2).textContent = program.skater_id;
+            });
+        }
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchPrograms();
+        })
+        
+    </script>
+</body>
+</html>

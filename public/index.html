@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Figure Skating Program Music Database</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <script>
+        const createArrayAtoZ = () => {
+            return Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+        };
+
+        const jumptoAnchor = (anchor) => {
+            window.location.href = "#" + anchor;
+        };
+
+        const createDivForCharElement = (charToAdd) => {
+            return `<div class='CharacterElement' data-filter='${charToAdd}'>${charToAdd}</div>`;
+        };
+
+        const createNavigationList = () => {
+            const abcChars = createArrayAtoZ();
+            const navigationEntries = abcChars.map(createDivForCharElement).join('');
+            $('#nav').append(navigationEntries);
+
+            abcChars.forEach(letter => {
+                $(`.CharacterElement[data-filter='${letter}']`).click(() => jumptoAnchor(letter));
+                addListEntries(letter);
+            });
+        };
+
+        async function addListEntries(letter) {
+            // Fetch the programs data
+            const response = await fetch('/.netlify/functions/app');
+            const programs = await response.json();
+
+            // Filter the programs by the starting letter
+            const programsData = programs.filter(program => program.program_title.startsWith(letter));
+
+            // Create a container for each letter box
+            const letterBox = $("<div class='AppElement' id='" + letter + "'>" + letter + "</div>");
+
+            // Append the container to the AppComponent
+            $('#AppComponent').append(letterBox);
+
+            // Create the table structure
+            const table = $("<table class='programTable'>");
+            const thead = $("<thead>");
+            const tbody = $("<tbody>");
+
+            // Append the table structure to the letter box
+            letterBox.append(table);
+            table.append(thead);
+            table.append(tbody);
+
+            // Populate the table body with the program data
+            programsData.forEach(program => {
+                const row = $('<tr>');
+                row.append(`<td>${program.program_title}</td>`);
+                tbody.append(row);
+            });
+
+            // Append the populated tbody to the table
+            table.append(tbody);
+
+        }
+
+        $(document).ready(() => {
+            createNavigationList();
+        });
+    </script>
+
+</head>
+<body>
+    <h1>Figure Skating Program Music Database</h1>
+    <h1> (this index page displays titles of music alphabetically with clickable link) </h1>
+    <div id="nav" class="CharacterContainer"></div>
+    <div id="AppComponent"></div>
+</body>
+</html>
