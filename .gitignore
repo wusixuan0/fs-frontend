@@ -1,7 +1,7 @@
 node_modules/
 .env
 .idea
-netlify/functions/api-data
+# netlify/functions/api-data
 
 # Local Netlify folder
 .netlify
