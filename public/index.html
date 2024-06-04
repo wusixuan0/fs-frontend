@@ -30,13 +30,6 @@
         };
 
         async function addListEntries(letter) {
-            // Fetch the programs data
-            const response = await fetch('/.netlify/functions/app');
-            const programs = await response.json();
-
-            // Filter the programs by the starting letter
-            const programsData = programs.filter(program => program.program_title.startsWith(letter));
-
             // Create a container for each letter box
             const letterBox = $("<div class='AppElement' id='" + letter + "'>" + letter + "</div>");
 
@@ -53,10 +46,14 @@
             table.append(thead);
             table.append(tbody);
 
+            // Fetch the programs data
+            const response = await fetch('/.netlify/functions/app');
+            const data = await response.json();
+
             // Populate the table body with the program data
-            programsData.forEach(program => {
+            data["programs"][letter].forEach(music => {
                 const row = $('<tr>');
-                row.append(`<td>${program.program_title}</td>`);
+                row.append(`<td><a href="${music.id}" style='text-decoration:none;color: black;'>${music.title}</a></td>`);
                 tbody.append(row);
             });
 
@@ -73,7 +70,6 @@
 </head>
 <body>
     <h1>Figure Skating Program Music Database</h1>
-    <h1> (this index page displays titles of music alphabetically with clickable link) </h1>
     <div id="nav" class="CharacterContainer"></div>
     <div id="AppComponent"></div>
 </body>

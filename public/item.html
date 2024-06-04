@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1></h1>
+
+    <table id="programTable">
+        <thead>
+            <tr>
+                <th>Skater</th>
+                <th>Country</th>
+                <th>Discipline</th>
+                <th>Program Type</th>
+                <th>Season</th>
+                <th>Choreographer</th>
+            </tr>
+        </thead>
+        <tbody id="programTableBody">
+            <!-- Program data will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Access the programs variable directly
+        async function fetchPrograms() {
+            // Fetch the programs data
+            const response = await fetch('/.netlify/functions/app');
+            const data = await response.json();
+            $('h1').append(data["response"]["music_title"]);
+            $('title').append(data["response"]["music_title"]);
+
+            // Populate the table with the fetched data
+            const tableBody = document.getElementById('programTableBody');
+            
+            data["response"]["programs"].forEach(program => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = program.skater_name;
+                row.insertCell(1).textContent = program.skater_country;
+                row.insertCell(2).textContent = program.discipline_type;
+                row.insertCell(3).textContent = program.program_type;
+                row.insertCell(4).textContent = program.season;
+                row.insertCell(5).textContent = program.choreographer_name;
+            });
+        }
+
+        $(document).ready(() => {
+            fetchPrograms();
+        });
+        
+    </script>
+</body>
+</html>
