@@ -23,3 +23,6 @@
     margin-right: 10px;
     cursor: pointer;
 }
+.description {
+    line-height: 1.5;
+}
